@@ -13,12 +13,12 @@ float redValue;
 float blueValue;
 
 //VERTICES UTILIZADOS
-float vertices[] = {
+std::vector<float> vertices= {
     // positions         // colors
-    0.5f, -0.5f, 0.0f, greenValue, redValue, blueValue,  // bottom right
-    -0.5f, -0.5f, 0.0f, greenValue, redValue, blueValue, // bottom left
-    0.0f, 0.5f, 0.0f, greenValue, redValue, blueValue    // top
-
+     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f  // top left
 };
 
 int main()
@@ -59,14 +59,14 @@ int main()
 
     int shaderProgram = glCreateProgram(); //criando programa shader
     glattachlink(shaderProgram, vertexShader, fragmentShader);
-
+    
     Loader loader = Loader();
     std::vector<float> positions = {0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f, -0.5f, 0.5f, 0.0f};
     std::vector<unsigned int> indices = {0, 1, 3, 1, 2, 3};
     std::vector<float> textureCoords = {1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
-    Model modelo = Model(loader.loadVAO(positions, indices, textureCoords));
+    Model modelo = Model(loader.loadVAO(vertices, indices, textureCoords));
     Renderer renderer = Renderer();
-
+    unsigned int texture = loader.loadTexture("Textura/container.jpg");
     std::vector<Model> modelos;
 
     modelos.push_back(modelo);
@@ -78,7 +78,7 @@ int main()
         processInput(window);
         // comandos de renderização
         glUseProgram(shaderProgram);
-
+        glBindTexture(GL_TEXTURE_2D, texture);
         renderer.render(modelos);
         // glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // limpar o buffer com essa cor :)
         // glClear(GL_COLOR_BUFFER_BIT);
