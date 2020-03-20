@@ -1,5 +1,6 @@
 #include "renderer.hpp"
-
+#include <iostream>
+using namespace std;
 Renderer::Renderer() : backgroundColor(0, 0, 0) {}
 
 void Renderer::render(std::vector<Model> models)
@@ -9,7 +10,6 @@ void Renderer::render(std::vector<Model> models)
     {
 
         prepareModel(model);
-
         glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
         unbindModel();
     }
@@ -22,6 +22,7 @@ void Renderer::prepareModel(Model model)
     glBindVertexArray(model.getVaoId());
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
 }
 
 void Renderer::unbindModel()
