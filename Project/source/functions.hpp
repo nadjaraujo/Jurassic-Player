@@ -49,7 +49,7 @@ const char *fragmentShaderSource = "#version 400 core\n"
                                    "uniform sampler2D ourTexture;\n"
                                    "void main()\n"
                                    "{\n"
-                                   "   FragColor = texture(ourTexture, TexCoord);\n"
+                                   "   FragColor = texture(ourTexture, TexCoord) * vec4(ourColor, 1.0);\n"
                                    "}\n\0";
 
 void glVertexsourcecompile(int vertexShader)
