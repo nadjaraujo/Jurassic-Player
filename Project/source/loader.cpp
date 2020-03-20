@@ -9,7 +9,9 @@ Model Loader::loadVAO(const std::vector<float> &position, const std::vector<unsi
     bindIndicesBuffer(indices);
     // Store model positionitions on VAO 0
     storeDataInAttributeList(0, 3, position);
-    storeDataInAttributeList(1, 2, textureCoords);
+    storeDataInAttributeList(1, 3, position);
+    storeDataInAttributeList(2, 2, position);
+//    storeDataInAttributeList(1, 2, textureCoords);
 
     // Unbind
     unbindVAO();
@@ -32,7 +34,7 @@ unsigned int Loader::createVAO()
 
 void Loader::storeDataInAttributeList(const unsigned int attributeNumber, const unsigned int size, const std::vector<float> &data)
 {
-
+    int n = 3*attributeNumber;
     unsigned int vboId;
     // Generate buffer object of size 1 and store it in vboId
     glGenBuffers(1, &vboId);
@@ -42,7 +44,7 @@ void Loader::storeDataInAttributeList(const unsigned int attributeNumber, const 
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
     // Put the data on the buffer, the data will be modified once and will be used many times with GL drawing commands
     glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(data.at(0)), data.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(attributeNumber, size, GL_FLOAT, false, 0, 0);
+    glVertexAttribPointer(attributeNumber, size, GL_FLOAT, false, 8 * sizeof(float), (void*)(n * sizeof(float)));
     // Unbind Buffer
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
