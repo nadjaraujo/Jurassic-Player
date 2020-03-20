@@ -2,7 +2,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.hpp" //biblioteca para as texturas
 
-Model Loader::loadVAO(const std::vector<float> &position, const std::vector<unsigned int> &indices, const std::vector<float> &textureCoords)
+Model Loader::loadVAO(const std::vector<float> &position, const std::vector<unsigned int> &indices)
 {
     // Create VAO
     GLuint vaoId = createVAO();
