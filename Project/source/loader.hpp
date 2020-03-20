@@ -7,7 +7,7 @@
 class Loader
 {
 public:
-    Model loadVAO(const std::vector<float> &, const std::vector<unsigned int> &, const std::vector<float> &);
+    Model loadVAO(const std::vector<float> &, const std::vector<unsigned int> &);
 
     unsigned int loadTexture(const std::string);
 
