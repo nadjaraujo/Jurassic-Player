@@ -71,13 +71,39 @@ int main()
 
     modelos.push_back(modelo);
 
+    glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
     // loop de renderização
     while (!glfwWindowShouldClose(window))
     {
         // input
         processInput(window);
         // comandos de renderização
+        
+        
+        transform = glm::rotate(transform, (float)glfwGetTime()/250 , glm::vec3(0.0f, 0.0f, 1.0f));
+
         glUseProgram(shaderProgram);
+
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
+
+        timeValue = glfwGetTime();
+        greenValue = sin(timeValue);
+        redValue = cos(timeValue);
+        blueValue = (redValue + greenValue) / 2.0f;
+        if(greenValue < 0) greenValue = greenValue*-1;
+        if (redValue < 0) redValue = redValue*-1;
+        if (blueValue < 0) blueValue = blueValue*-1;
+        vertices[3] = greenValue;
+        vertices[12] = redValue;
+        vertices[21] = blueValue;
+        vertices[27] = (greenValue + redValue)/2;
+        vertices[28] = vertices[27];
+    //    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    // Put the data on the buffer, the data will be modified once and will be used many times with GL drawing commands
+    //    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices.at(0)), vertices.data(), GL_STATIC_DRAW);
+        modelo = Model(loader.loadVAO(vertices, indices));
+        modelos.push_back(modelo);
         glBindTexture(GL_TEXTURE_2D, texture);
         renderer.render(modelos);
         // glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // limpar o buffer com essa cor :)
