@@ -4,7 +4,6 @@
 #include "model.hpp"
 #include "loader.hpp"
 
-
 using namespace std;
 
 //ESSAS SAO AS CORES QUE CORRESPONDEM AOS VERTICES
@@ -14,12 +13,12 @@ float redValue;
 float blueValue;
 
 //VERTICES UTILIZADOS
-std::vector<float> vertices= {
+std::vector<float> vertices = {
     // positions         // colors
-     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left
+    0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // top right
+    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // bottom right
+    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+    -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f   // top left
 };
 
 int main()
@@ -52,61 +51,52 @@ int main()
     /* -------------------------------------------
         CLOUD NE */
 
-	Shader ourShader("texture.vs", "texture.fs");
+    Shader ourShader("./source/texture.vs", "./source/texture.fs");
 
     Loader loader = Loader();
     std::vector<float> positions = {0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f, -0.5f, 0.5f, 0.0f};
     std::vector<unsigned int> indices = {0, 1, 3, 1, 2, 3};
     std::vector<float> textureCoords = {1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
 
-	Model modelo = Model(loader.loadVAO(vertices, indices));
+    Model modelo = Model(loader.loadVAO(vertices, indices));
 
-	Renderer renderer = Renderer();
+    Renderer renderer = Renderer();
 
-	unsigned int texture1 = loader.loadTexture("../Textura/container.jpg");
-	unsigned int texture2 = loader.loadTexture("../Textura/Ednaldo_Pereira.jpg");
+    unsigned int texture1 = loader.loadTexture("./Textura/container.jpg");
+    unsigned int texture2 = loader.loadTexture("./Textura/Ednaldo_Pereira.jpg");
 
-	std::vector<Model> modelos;
-
+    std::vector<Model> modelos;
 
     modelos.push_back(modelo);
 
-	ourShader.use();
-	glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0);
-	glUniform1i(glGetUniformLocation(ourShader.ID, "texture2"), 1);
+    ourShader.use();
+    glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0);
+    glUniform1i(glGetUniformLocation(ourShader.ID, "texture2"), 1);
 
-
-
-	// loop de renderização
+    // loop de renderização
     while (!glfwWindowShouldClose(window))
     {
         // input
         processInput(window);
+        renderer.clear();
 
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture2);
 
-		//Seta a cor do fundo e limpa o buffer
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+        glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        transform = glm::scale(transform, glm::vec3(1.0f, 2.0f, 1.0f));
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);
+        ourShader.use();
 
-		glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-		transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-		transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        unsigned int shaderProgram = glGetUniformLocation(ourShader.ID, "transform");
+        glUniformMatrix4fv(shaderProgram, 1, GL_FALSE, glm::value_ptr(transform));
+        renderer.render(modelos);
 
-		ourShader.use();
-
-		unsigned int shaderProgram = glGetUniformLocation(ourShader.ID, "transform");
-		glUniformMatrix4fv(shaderProgram, 1, GL_FALSE, glm::value_ptr(transform));
-		renderer.render(modelos);
-
-
-
-
-		// glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // limpar o buffer com essa cor :)
+        // glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // limpar o buffer com essa cor :)
         // glClear(GL_COLOR_BUFFER_BIT);
         // timeValue = glfwGetTime();
         // greenValue = sin(timeValue);
@@ -137,7 +127,6 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
 
     //limpar memoria
     glfwTerminate();

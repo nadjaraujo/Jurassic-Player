@@ -1,11 +1,13 @@
 #ifndef MODEL_HPP
 #define MODEL_HPP
+#define
 
 class Model
 {
 private:
     unsigned int vaoId;
     unsigned int vertexCount;
+    unsigned int textureId;
 
 public:
     Model();
