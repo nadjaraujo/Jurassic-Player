@@ -73,54 +73,48 @@ int main()
     glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0);
     glUniform1i(glGetUniformLocation(ourShader.ID, "texture2"), 1);
 
+
+	//ADICIONANDO PROFUNDIDADE (PERSPECTIVA)
+	glm::mat4 model = glm::mat4(1.0f); // Tem as translações, escalas e/ou rotações que queremos aplicar nos objetos do world space
+	glm::mat4 view = glm::mat4(1.0f); // Tem a matriz view, ela move a cena inteira
+	glm::mat4 projection; // Matriz de projeção
+
+	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); //rotacionando o eixo x
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); //movendo a cena um pouco pra trás no eixo z para poder enxergar a transformação - ele inicialmente fica no eixo 0,0,0
+	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f); // "deitando" a imagem em 45 rad
+
+	//alocando as informações
+	int modelLoc = glGetUniformLocation(ourShader.ID, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	int viewLoc = glGetUniformLocation(ourShader.ID, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+	int projectionLoc = glGetUniformLocation(ourShader.ID, "projection");
+	ourShader.setMat4("projection", projection);
+
+
     // loop de renderização
     while (!glfwWindowShouldClose(window))
     {
         // input
         processInput(window);
-        renderer.clear();
+     	renderer.clear();
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
 
-        glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-        transform = glm::scale(transform, glm::vec3(1.0f, 2.0f, 1.0f));
+        //glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        //transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+        //transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        //transform = glm::scale(transform, glm::vec3(1.0f, 2.0f, 1.0f));
 
         ourShader.use();
 
-        unsigned int shaderProgram = glGetUniformLocation(ourShader.ID, "transform");
-        glUniformMatrix4fv(shaderProgram, 1, GL_FALSE, glm::value_ptr(transform));
+        //unsigned int shaderProgram = glGetUniformLocation(ourShader.ID, "transform");
+        //glUniformMatrix4fv(shaderProgram, 1, GL_FALSE, glm::value_ptr(transform));
         renderer.render(modelos);
 
-        // glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // limpar o buffer com essa cor :)
-        // glClear(GL_COLOR_BUFFER_BIT);
-        // timeValue = glfwGetTime();
-        // greenValue = sin(timeValue);
-        // redValue = cos(timeValue);
-        // blueValue = (redValue + greenValue) / 2.0f;
-        // if (greenValue < 0)
-        //     greenValue = greenValue * -1;
-        // if (redValue < 0)
-        //     redValue = redValue * -1;
-        // if (blueValue < 0)
-        //     blueValue = blueValue * -1;
-        // vertices[3] = greenValue;
-        // vertices[10] = redValue;
-        // vertices[17] = blueValue;
-        // glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW); //carregando vertices no buffer
-
-        // //    int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-        // //    glUniform4f(vertexColorLocation, redValue, greenValue, blueValue, 1.0f);
-        // // draw our first triangle
-
-        // glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-
-        // glDrawArrays(GL_TRIANGLES, 0, 3); //desenhando
 
         // // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // // -------------------------------------------------------------------------------
