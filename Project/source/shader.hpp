@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-
+#include "camera.hpp"
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -15,7 +15,7 @@ public:
 	unsigned int ID;
 	// constructor generates the shader on the fly
 	// ------------------------------------------------------------------------
-	Shader(const char* vertexPath, const char* fragmentPath)
+	Shader(const char *vertexPath, const char *fragmentPath)
 	{
 		// 1. retrieve the vertex/fragment source code from filePath
 		std::string vertexCode;
@@ -45,8 +45,8 @@ public:
 		{
 			std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
 		}
-		const char* vShaderCode = vertexCode.c_str();
-		const char * fShaderCode = fragmentCode.c_str();
+		const char *vShaderCode = vertexCode.c_str();
+		const char *fShaderCode = fragmentCode.c_str();
 		// 2. compile shaders
 		unsigned int vertex, fragment;
 		// vertex shader
@@ -61,20 +61,53 @@ public:
 		checkCompileErrors(fragment, "FRAGMENT");
 		// shader Program
 		ID = glCreateProgram();
+
 		glAttachShader(ID, vertex);
 		glAttachShader(ID, fragment);
+
+		glBindAttribLocation(ID, 0, "position");
+		glBindAttribLocation(ID, 1, "textureCoords");
+
 		glLinkProgram(ID);
 		checkCompileErrors(ID, "PROGRAM");
 		// delete the shaders as they're linked into our program now and no longer necessery
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
+	}
 
+	glm::mat4 createViewMatrix(Camera t_camera)
+	{
+
+		/*glm::mat4 view_matrix = glm::mat4(1.0f);
+
+		view_matrix = glm::rotate(view_matrix, glm::radians(t_camera.getPitch()), {1, 0, 0});
+		view_matrix = glm::rotate(view_matrix, glm::radians(t_camera.getYaw()), {0, 1, 0});
+		view_matrix = glm::translate(view_matrix, -t_camera.getPosition());*/
+		glm::mat4 view_matrix = glm::lookAt(t_camera.getPosition(), t_camera.getPosition() + t_camera.getFront(), t_camera.getUp());
+
+		return view_matrix;
+	}
+
+	void loadViewMatrix(const Camera t_camera)
+	{
+
+		glm::mat4 matrix = createViewMatrix(t_camera);
+		setMat4("view", matrix);
+	}
+	void loadProjectionMatrix(const glm::mat4 t_matrix)
+	{
+		setMat4("projection", t_matrix);
 	}
 	// activate the shader
 	// ------------------------------------------------------------------------
 	void use() const
 	{
 		glUseProgram(ID);
+	}
+
+	void stop() const
+	{
+		glUseProgram(0);
 	}
 	// utility uniform functions
 	// ------------------------------------------------------------------------
@@ -148,7 +181,8 @@ private:
 			if (!success)
 			{
 				glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-				std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+				std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n"
+						  << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
 			}
 		}
 		else
@@ -157,7 +191,8 @@ private:
 			if (!success)
 			{
 				glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-				std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+				std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n"
+						  << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
 			}
 		}
 	}

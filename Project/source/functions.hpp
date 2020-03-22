@@ -1,6 +1,10 @@
 
+#ifndef FUNCTIONS_HPP
+#define FUNCTIONS_HPP
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <glm/glm.hpp>
+#include "camera.hpp"
 
 //----------------------------------------------------------------------------------------
 //FUNCOES REFERENTES A JANELAS
@@ -10,14 +14,6 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-//entrada de controle
-void processInput(GLFWwindow *window)
-{
-    // função que recebe janela e tecla "esc" como entrada
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
-
 void glwindowhint()
 {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -25,3 +21,4 @@ void glwindowhint()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
+#endif

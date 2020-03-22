@@ -14,8 +14,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../source/shader.hpp"
-
 #if defined(__BORLANDC__)
 typedef unsigned char uint8_t;
 typedef __int64 int64_t;

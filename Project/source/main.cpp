@@ -12,15 +12,6 @@ float greenValue;
 float redValue;
 float blueValue;
 
-//VERTICES UTILIZADOS
-std::vector<float> vertices = {
-    // positions         // colors
-    0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // top right
-    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-    -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f   // top left
-};
-
 int main()
 {
     // função pra instanciar a janela do GLFW
@@ -50,83 +41,113 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     /* -------------------------------------------
         CLOUD NE */
-
-    Shader ourShader("./source/texture.vs", "./source/texture.fs");
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //Shader ourShader("./source/texture.vs", "./source/texture.fs");
 
     Loader loader = Loader();
-    std::vector<float> positions = {0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f, -0.5f, 0.5f, 0.0f};
-    std::vector<unsigned int> indices = {0, 1, 3, 1, 2, 3};
-    std::vector<float> textureCoords = {1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
+    std::vector<float> vertices = {-0.5f, 0.5f, -0.5f,
+                                   -0.5f, -0.5f, -0.5f,
+                                   0.5f, -0.5f, -0.5f,
+                                   0.5f, 0.5f, -0.5f,
 
-    Model modelo = Model(loader.loadVAO(vertices, indices));
+                                   -0.5f, 0.5f, 0.5f,
+                                   -0.5f, -0.5f, 0.5f,
+                                   0.5f, -0.5f, 0.5f,
+                                   0.5f, 0.5f, 0.5f,
 
+                                   0.5f, 0.5f, -0.5f,
+                                   0.5f, -0.5f, -0.5f,
+                                   0.5f, -0.5f, 0.5f,
+                                   0.5f, 0.5f, 0.5f,
+
+                                   -0.5f, 0.5f, -0.5f,
+                                   -0.5f, -0.5f, -0.5f,
+                                   -0.5f, -0.5f, 0.5f,
+                                   -0.5f, 0.5f, 0.5f,
+
+                                   -0.5f, 0.5f, 0.5f,
+                                   -0.5f, 0.5f, -0.5f,
+                                   0.5f, 0.5f, -0.5f,
+                                   0.5f, 0.5f, 0.5f,
+
+                                   -0.5f, -0.5f, 0.5f,
+                                   -0.5f, -0.5f, -0.5f,
+                                   0.5f, -0.5f, -0.5f,
+                                   0.5f, -0.5f, 0.5f};
+    std::vector<unsigned int> indices = {0, 1, 3,
+                                         3, 1, 2,
+                                         4, 5, 7,
+                                         7, 5, 6,
+                                         8, 9, 11,
+                                         11, 9, 10,
+                                         12, 13, 15,
+                                         15, 13, 14,
+                                         16, 17, 19,
+                                         19, 17, 18,
+                                         20, 21, 23,
+                                         23, 21, 22};
+    std::vector<float> textureCoords = {
+        0, 0,
+        0, 1,
+        1, 1,
+        1, 0,
+        0, 0,
+        0, 1,
+        1, 1,
+        1, 0,
+        0, 0,
+        0, 1,
+        1, 1,
+        1, 0,
+        0, 0,
+        0, 1,
+        1, 1,
+        1, 0,
+        0, 0,
+        0, 1,
+        1, 1,
+        1, 0,
+        0, 0,
+        0, 1,
+        1, 1,
+        1, 0};
+
+    Model modelo = loader.loadVAO(vertices, indices, textureCoords);
+    modelo.setPosition(glm::vec3(0.0f, 0.0f, -2.0f));
     Renderer renderer = Renderer();
 
-    unsigned int texture1 = loader.loadTexture("./Textura/container.jpg");
-    unsigned int texture2 = loader.loadTexture("./Textura/Ednaldo_Pereira.jpg");
+    // int texture1 = loader.loadTexture("./Textura/checkerboard.png");
 
+    unsigned int texture2 = loader.loadTexture("./Textura/Ednaldo_Pereira.jpg");
+    modelo.setTexture(texture2);
     std::vector<Model> modelos;
 
     modelos.push_back(modelo);
 
-    ourShader.use();
-    glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0);
-    glUniform1i(glGetUniformLocation(ourShader.ID, "texture2"), 1);
+    //ourShader.use();
 
     // loop de renderização
+
+    Camera camera;
     while (!glfwWindowShouldClose(window))
     {
-        // input
-        processInput(window);
         renderer.clear();
+        camera.processInput(window);
+        //camera.handleMouse(window);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture1);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
+        //ourShader.use();
 
-        glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-        transform = glm::scale(transform, glm::vec3(1.0f, 2.0f, 1.0f));
-
-        ourShader.use();
-
-        unsigned int shaderProgram = glGetUniformLocation(ourShader.ID, "transform");
-        glUniformMatrix4fv(shaderProgram, 1, GL_FALSE, glm::value_ptr(transform));
-        renderer.render(modelos);
-
-        // glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // limpar o buffer com essa cor :)
-        // glClear(GL_COLOR_BUFFER_BIT);
-        // timeValue = glfwGetTime();
-        // greenValue = sin(timeValue);
-        // redValue = cos(timeValue);
-        // blueValue = (redValue + greenValue) / 2.0f;
-        // if (greenValue < 0)
-        //     greenValue = greenValue * -1;
-        // if (redValue < 0)
-        //     redValue = redValue * -1;
-        // if (blueValue < 0)
-        //     blueValue = blueValue * -1;
-        // vertices[3] = greenValue;
-        // vertices[10] = redValue;
-        // vertices[17] = blueValue;
-        // glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW); //carregando vertices no buffer
-
-        // //    int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-        // //    glUniform4f(vertexColorLocation, redValue, greenValue, blueValue, 1.0f);
-        // // draw our first triangle
-
-        // glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-
-        // glDrawArrays(GL_TRIANGLES, 0, 3); //desenhando
+        //unsigned int shaderProgram = glGetUniformLocation(ourShader.ID, "transform");
+        //glUniformMatrix4fv(shaderProgram, 1, GL_FALSE, glm::value_ptr(transform));
+        renderer.render(camera, modelos);
 
         // // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    renderer.cleanUp();
 
     //limpar memoria
     glfwTerminate();
