@@ -98,6 +98,12 @@ public:
 	{
 		setMat4("projection", t_matrix);
 	}
+
+	void loadLighting(const glm::vec3 t_light)
+	{
+		setVec3("lightPosition", t_light);
+	}
+
 	// activate the shader
 	// ------------------------------------------------------------------------
 	void use() const

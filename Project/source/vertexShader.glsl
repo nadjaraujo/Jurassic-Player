@@ -8,6 +8,7 @@ uniform mat4 transform;
 //Declaraçoes da perspectiva
 uniform mat4 view;
 uniform mat4 projection;
+uniform vec3 lightPosition;
 
 void main()
 {

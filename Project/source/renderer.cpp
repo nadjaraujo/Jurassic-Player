@@ -21,6 +21,8 @@ Renderer::Renderer() : backgroundColor(0, 0, 0), shader("./source/vertexShader.g
     createProjectionMatrix();
     shader.use();
     shader.loadProjectionMatrix(projectionMatrix);
+    shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    shader.setFloat("lightIntensity", 0.2f);
     shader.stop();
 }
 
@@ -58,6 +60,7 @@ void Renderer::prepareModel(Model model)
 
     // Model matrix
     shader.setMat4("transform", createTransformationMatrix(model.position, model.rotation, model.scale));
+    shader.setVec3("objectColor", 1.0f, 0.5f, 0.3f);
 }
 
 void Renderer::unbindModel()
