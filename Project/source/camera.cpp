@@ -3,7 +3,7 @@
 Camera::Camera()
 {
 
-    position = glm::vec3(0, 0, 2.0f);
+    position = glm::vec3(-2.0, 0, 0.0f);
     front = glm::vec3(0.0f, 0.0f, -1.0f);
     up = glm::vec3(0.0f, 1.0f, 0.0f);
     firstMouse = true;
@@ -74,23 +74,6 @@ void Camera::processInput(GLFWwindow *window)
     //     front.y = sin(glm::radians(pitch));
     //     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     //     front = glm::normalize(front);
-}
-
-void Camera::move(GLFWwindow *window)
-{
-    const float cameraSpeed = 0.1f; // adjust accordingly
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        position.z -= cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        position.z += cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        position.x -= cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        position.x += cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-        yaw -= cameraSpeed * 15;
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-        yaw += cameraSpeed * 15;
 }
 
 float Camera::getPitch()

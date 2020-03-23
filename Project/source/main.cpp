@@ -113,7 +113,7 @@ int main()
         1, 0};
 
     Model modelo = loader.loadVAO(vertices, indices, textureCoords);
-    modelo.setPosition(glm::vec3(0.0f, 0.0f, -2.0f));
+    modelo.setPosition(glm::vec3(1.0f, 0.0f, 0.0f));
     Renderer renderer = Renderer();
 
     // int texture1 = loader.loadTexture("./Textura/checkerboard.png");
@@ -133,7 +133,7 @@ int main()
     {
         renderer.clear();
         camera.processInput(window);
-        //camera.handleMouse(window);
+        camera.handleMouse(window);
 
         //ourShader.use();
 
