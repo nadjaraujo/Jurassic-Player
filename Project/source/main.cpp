@@ -74,6 +74,37 @@ int main()
                                    -0.5f, -0.5f, -0.5f,
                                    0.5f, -0.5f, -0.5f,
                                    0.5f, -0.5f, 0.5f};
+
+    std::vector<float> normalVec = {0.0f, 0.0f, -1.0f,
+                                    0.0f, 0.0f, -1.0f,
+                                    0.0f, 0.0f, -1.0f,
+                                    0.0f, 0.0f, -1.0f,
+
+                                    0.0f, 0.0f, 1.0f,
+                                    0.0f, 0.0f, 1.0f,
+                                    0.0f, 0.0f, 1.0f,
+                                    0.0f, 0.0f, 1.0f,
+
+                                    1.0f, 0.0f, 0.0f,
+                                    1.0f, 0.0f, 0.0f,
+                                    1.0f, 0.0f, 0.0f,
+                                    1.0f, 0.0f, 0.0f,
+
+                                    -1.0f, 0.0f, 0.0f,
+                                    -1.0f, 0.0f, 0.0f,
+                                    -1.0f, 0.0f, 0.0f,
+                                    -1.0f, 0.0f, 0.0f,
+
+                                    0.0f, 1.0f, 0.0f,
+                                    0.0f, 1.0f, 0.0f,
+                                    0.0f, 1.0f, 0.0f,
+                                    0.0f, 1.0f, 0.0f,
+
+                                    0.0f, -1.0f, 0.0f,
+                                    0.0f, -1.0f, 0.0f,
+                                    0.0f, -1.0f, 0.0f,
+                                    0.0f, -1.0f, 0.0f};
+
     std::vector<unsigned int> indices = {0, 1, 3,
                                          3, 1, 2,
                                          4, 5, 7,
@@ -135,13 +166,21 @@ int main()
     modelo1.setTexture(texture1);
     modelos.push_back(modelo1);
 
-    unsigned int textureChao = loader.loadTexture("./Textura/grass.jpg");
-    Model chao = loader.loadVAO(vertices, indices, textureCoords); // o chão hehe
+    unsigned int textureChao = loader.loadTexture("./Textura/grass2.jpg");
+    Model chao = loader.loadVAO(vertices, indices, textureCoords, normalVec); // o chão hehe
     chao.setTexture(textureChao);
     chao.setPosition(glm::vec3(0.0f, -6.0f, 0.0f));
     chao.setScale(glm::vec3(500.0f, 0.5f, 500.0f));
 
     modelos.push_back(chao);
+
+    unsigned int textureSol = loader.loadTexture("./Textura/2k_sun.jpg");
+    Model Sol = loader.loadVAO(vertices, indices, textureCoords, normalVec);
+    Sol.setTexture(textureSol);
+    glm::vec3 lightPos(.0f, 20.0f, .0f);
+    Sol.setPosition(lightPos);
+//    Sol.setScale(glm::vec3(500.0f, 0.5f, 500.0f));
+    modelos.push_back(Sol);
     //ourShader.use();
 
     // loop de renderização

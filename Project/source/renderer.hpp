@@ -2,7 +2,7 @@
 #define RENDERER_HPP
 
 #include "shader.hpp"
-#include "./model.hpp"
+#include "model.hpp"
 #include "camera.hpp"
 class Renderer
 {

@@ -146,7 +146,7 @@ bool loadOBJ(const char *t_file, std::vector<float> &t_vertices_vector,
     return true;
 }
 
-Model Loader::loadVAO(const std::vector<float> &position, const std::vector<unsigned int> &indices, const std::vector<float> &textureCoords)
+Model Loader::loadVAO(const std::vector<float> &position, const std::vector<unsigned int> &indices, const std::vector<float> &textureCoords, const std::vector<float> &normalVec)
 {
     // Create VAO
     unsigned int vaoId = createVAO();
@@ -156,7 +156,7 @@ Model Loader::loadVAO(const std::vector<float> &position, const std::vector<unsi
     //storeDataInAttributeList(1, 2, textureCoords);
     //storeDataInAttributeList(2, 2, position);
     storeDataInAttributeList(1, 2, textureCoords);
-
+    storeDataInAttributeList(2, 3, normalVec);
     // Unbind
     unbindVAO();
     // Return RawModel
@@ -249,11 +249,12 @@ unsigned int Loader::loadTexture(const std::string fileName)
 Model Loader::loadObj(const char *t_file)
 {
     //carrega os vetores do obj
+    std::vector<float> normalVec;
     std::vector<float> vertices_vector;
     std::vector<float> texture_vector;
     std::vector<float> normals_vector;
     std::vector<unsigned int> indices_vector;
     loadOBJ(t_file, vertices_vector, texture_vector, normals_vector, indices_vector);
 
-    return loadVAO(vertices_vector, indices_vector, texture_vector);
+    return loadVAO(vertices_vector, indices_vector, texture_vector, normalVec);
 }

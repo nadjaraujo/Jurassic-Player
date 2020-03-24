@@ -21,8 +21,10 @@ Renderer::Renderer() : backgroundColor(0, 0, 0), shader("./source/vertexShader.g
     createProjectionMatrix();
     shader.use();
     shader.loadProjectionMatrix(projectionMatrix);
-    shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    shader.setVec3("lightamb", .5f, .5f, .5f);
+    shader.setVec3("lightfont", 1.0f, 1.0f, 0.0f);
     shader.setFloat("lightIntensity", 1.0f);
+    shader.setVec3("lightPos", 0.0f, -10.f, .0f);
     shader.stop();
 }
 
@@ -36,7 +38,7 @@ void Renderer::render(Camera t_camera, std::vector<Model> models)
 {
     shader.use();
     shader.loadViewMatrix(t_camera);
-
+    shader.setVec3("viewPos", t_camera.getPosition());
     for (Model &model : models)
     {
 
@@ -54,13 +56,13 @@ void Renderer::prepareModel(Model model)
     glBindVertexArray(model.getVaoId());
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
-
+    glEnableVertexAttribArray(2);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, model.getTextureId());
 
     // Model matrix
     shader.setMat4("transform", createTransformationMatrix(model.position, model.rotation, model.scale));
-    shader.setVec3("objectColor", 1.0f, 0.5f, 0.3f);
+    shader.setVec3("objectColor", 1.0f, 1.0f, 1.0f);
 }
 
 void Renderer::unbindModel()
@@ -69,6 +71,7 @@ void Renderer::unbindModel()
     // Disable VBOs
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
     // Unbind VAO
     glBindVertexArray(0);
 }
