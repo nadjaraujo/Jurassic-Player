@@ -152,7 +152,7 @@ int main()
     for (int i = 0; i < numeroArvores; i++)
     {
         Model modelo = loader.loadObj("./Modelos/tree.obj");
-        modelo.setPosition(glm::vec3(1.0f + (rand() % 100 - 50), -5.0f, 0.0f + (rand() % 100 - 50)));
+        modelo.setPosition(glm::vec3(1.0f + (rand() % 100 - 50), -6.0f, 0.0f + (rand() % 100 - 50)));
 
         modelo.setTexture(texture2);
         // int texture1 = loader.loadTexture("./Textura/checkerboard.png");
@@ -161,7 +161,7 @@ int main()
     }
 
     Model modelo1 = loader.loadObj("./Modelos/trex.obj");
-    modelo1.setPosition(glm::vec3(-5.0f, 0.0, -5.0));
+    modelo1.setPosition(glm::vec3(0.0f, -6.0, 0.0));
     //modelo1.setScale(glm::vec3(50.0, 0.0, 0.0));
     modelo1.setTexture(texture1);
     modelos.push_back(modelo1);
@@ -172,14 +172,14 @@ int main()
     chao.setPosition(glm::vec3(0.0f, -6.0f, 0.0f));
     chao.setScale(glm::vec3(500.0f, 0.5f, 500.0f));
 
-    modelos.push_back(chao);
+    //modelos.push_back(chao);
 
     unsigned int textureSol = loader.loadTexture("./Textura/2k_sun.jpg");
     Model Sol = loader.loadVAO(vertices, indices, textureCoords, normalVec);
     Sol.setTexture(textureSol);
     glm::vec3 lightPos(.0f, 20.0f, .0f);
     Sol.setPosition(lightPos);
-//    Sol.setScale(glm::vec3(500.0f, 0.5f, 500.0f));
+    //    Sol.setScale(glm::vec3(500.0f, 0.5f, 500.0f));
     modelos.push_back(Sol);
     //ourShader.use();
 

@@ -146,17 +146,15 @@ bool loadOBJ(const char *t_file, std::vector<float> &t_vertices_vector,
     return true;
 }
 
-Model Loader::loadVAO(const std::vector<float> &position, const std::vector<unsigned int> &indices, const std::vector<float> &textureCoords, const std::vector<float> &normalVec)
+Model Loader::loadVAO(const std::vector<float> &position, const std::vector<unsigned int> &indices, const std::vector<float> &textureCoords, const std::vector<float> &normalVector)
 {
     // Create VAO
     unsigned int vaoId = createVAO();
     bindIndicesBuffer(indices);
     // Store model positionitions on VAO 0
     storeDataInAttributeList(0, 3, position);
-    //storeDataInAttributeList(1, 2, textureCoords);
-    //storeDataInAttributeList(2, 2, position);
     storeDataInAttributeList(1, 2, textureCoords);
-    storeDataInAttributeList(2, 3, normalVec);
+    storeDataInAttributeList(2, 3, normalVector);
     // Unbind
     unbindVAO();
     // Return RawModel
@@ -170,7 +168,7 @@ unsigned int Loader::createVAO()
     unsigned int vaoId;
     // Create one Vertex Array (VAO) and keep address
     glGenVertexArrays(1, &vaoId);
-    // Add VAO to vector
+    // Add VAO to vectorz
     vaos.push_back(vaoId);
     // Bind VAO
     glBindVertexArray(vaoId);
@@ -249,12 +247,11 @@ unsigned int Loader::loadTexture(const std::string fileName)
 Model Loader::loadObj(const char *t_file)
 {
     //carrega os vetores do obj
-    std::vector<float> normalVec;
     std::vector<float> vertices_vector;
     std::vector<float> texture_vector;
     std::vector<float> normals_vector;
     std::vector<unsigned int> indices_vector;
     loadOBJ(t_file, vertices_vector, texture_vector, normals_vector, indices_vector);
 
-    return loadVAO(vertices_vector, indices_vector, texture_vector, normalVec);
+    return loadVAO(vertices_vector, indices_vector, texture_vector, normals_vector);
 }
