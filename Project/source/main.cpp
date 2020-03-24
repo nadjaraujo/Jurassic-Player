@@ -143,7 +143,7 @@ int main()
         1, 1,
         1, 0};
 
-    int numeroArvores = 100;
+    int numeroArvores = 50;
     Renderer renderer = Renderer();
     //textura arvore
     unsigned int texture2 = loader.loadTexture("./Textura/tree.jpg");
@@ -153,7 +153,7 @@ int main()
     {
         Model modelo = loader.loadObj("./Modelos/tree.obj");
         modelo.setPosition(glm::vec3(1.0f + (rand() % 100 - 50), -6.0f, 0.0f + (rand() % 100 - 50)));
-
+        modelo.setScale(glm::vec3(3.0f, 3.0f, 3.0f));
         modelo.setTexture(texture2);
 
         modelos.push_back(modelo);
@@ -163,7 +163,7 @@ int main()
     unsigned int texture1 = loader.loadTexture("./Textura/dinossauro.jpg");
     Model modelo1 = loader.loadObj("./Modelos/dinossauronadja.obj");
     modelo1.setPosition(glm::vec3(0.0f, -6.0, 0.0));
-    //modelo1.setScale(glm::vec3(50.0, 0.0, 0.0));
+    //modelo1.setScale(glm::vec3(0.5, 0., 0.0));
     modelo1.setTexture(texture1);
     modelos.push_back(modelo1);
 
@@ -172,17 +172,11 @@ int main()
     Model chao = loader.loadVAO(vertices, indices, textureCoords, normalVec);
     chao.setTexture(textureChao);
     chao.setPosition(glm::vec3(0.0f, -6.0f, 0.0f));
-    chao.setScale(glm::vec3(100.0f, 0.5f, 100.0f));
+    chao.setScale(glm::vec3(150.0f, 0.5f, 150.0f));
     modelos.push_back(chao);
 
     // textura do sol
-    unsigned int textureSol = loader.loadTexture("./Textura/2k_sun.jpg");
-    Model Sol = loader.loadVAO(vertices, indices, textureCoords, normalVec);
-    Sol.setTexture(textureSol);
     glm::vec3 lightPos(.0f, 20.0f, .0f);
-    Sol.setPosition(lightPos);
-    //    Sol.setScale(glm::vec3(500.0f, 0.5f, 500.0f));
-    modelos.push_back(Sol);
     //ourShader.use();
 
     // loop de renderização

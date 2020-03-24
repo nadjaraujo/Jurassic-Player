@@ -14,8 +14,8 @@ glm::mat4 createTransformationMatrix(const glm::vec3 t_translation, const glm::v
 
     return transform;
 }
-
-Renderer::Renderer() : backgroundColor(0, 0, 0), shader("./source/vertexShader.glsl", "./source/fragmentShader.glsl")
+// limpar o buffer com a cor azul ceu
+Renderer::Renderer() : backgroundColor(0.5, 0.8, 0.9), shader("./source/vertexShader.glsl", "./source/fragmentShader.glsl")
 {
 
     createProjectionMatrix();
@@ -24,7 +24,7 @@ Renderer::Renderer() : backgroundColor(0, 0, 0), shader("./source/vertexShader.g
     shader.setVec3("lightamb", .5f, .5f, .5f);
     shader.setVec3("lightfont", 1.0f, 1.0f, 0.0f);
     shader.setFloat("lightIntensity", 1.0f);
-    shader.setVec3("lightPos", 0.0f, -10.f, .0f);
+    shader.setVec3("lightPos", 0.0f, 30.f, .0f);
     shader.stop();
 }
 
