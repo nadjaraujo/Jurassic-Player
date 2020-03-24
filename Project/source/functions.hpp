@@ -1,8 +1,8 @@
-
 #ifndef FUNCTIONS_HPP
 #define FUNCTIONS_HPP
 #include <GLFW/glfw3.h>
 #include <iostream>
+
 #include <glm/glm.hpp>
 #include "camera.hpp"
 

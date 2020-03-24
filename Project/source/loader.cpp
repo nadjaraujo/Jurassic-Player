@@ -1,6 +1,150 @@
 #include "loader.hpp"
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.hpp" //biblioteca para as texturas
+#include "stb_image.hpp" //biblioteca para as
+#include <fstream>
+#include <sstream>
+
+#include <iterator>
+//-----------------------------------------------------------------------------
+// Funções referentes a carregar um obj.
+
+static void splitString(std::string t_string, const char t_delimiter, std::vector<std::string> &t_vector)
+{
+
+    std::string temp = "";
+    for (char &c : t_string)
+    {
+        if (c != t_delimiter)
+        {
+            temp.insert(temp.end(), c);
+        }
+        else
+        {
+            if (!temp.empty())
+            {
+                t_vector.push_back(temp);
+            }
+            temp = "";
+        }
+    }
+
+    if (!temp.empty())
+    {
+        t_vector.push_back(temp);
+    }
+}
+
+static void processVertex(std::vector<unsigned int> &t_indices_vector, std::vector<float> &t_vertices_vector,
+                          std::vector<float> &t_normals_vector, std::vector<float> &t_texture_vector,
+                          std::vector<std::string> &t_vertex_str, std::vector<glm::vec2> &t_temp_texture,
+                          std::vector<glm::vec3> &t_temp_normals, std::vector<glm::vec3> &t_temp_vertices, int *index_cout)
+{
+
+    // Push vertex refered by the index
+    t_vertices_vector.push_back(t_temp_vertices[std::stoi(t_vertex_str[0]) - 1].x);
+    t_vertices_vector.push_back(t_temp_vertices[std::stoi(t_vertex_str[0]) - 1].y);
+    t_vertices_vector.push_back(t_temp_vertices[std::stoi(t_vertex_str[0]) - 1].z);
+
+    // Push texture coords refered by the index
+    t_texture_vector.push_back(t_temp_texture[std::stoi(t_vertex_str[1]) - 1].x);
+    t_texture_vector.push_back(t_temp_texture[std::stoi(t_vertex_str[1]) - 1].y);
+
+    // Push normals refered by the index
+    t_normals_vector.push_back(t_temp_normals[std::stoi(t_vertex_str[2]) - 1].x);
+    t_normals_vector.push_back(t_temp_normals[std::stoi(t_vertex_str[2]) - 1].y);
+    t_normals_vector.push_back(t_temp_normals[std::stoi(t_vertex_str[2]) - 1].z);
+
+    // Push the index in order
+    for (int v = 0; v < 3; v++)
+    {
+        t_indices_vector.push_back(*index_cout);
+        (*index_cout)++;
+    }
+}
+
+bool loadOBJ(const char *t_file, std::vector<float> &t_vertices_vector,
+             std::vector<float> &t_texture_vector, std::vector<float> &t_normals_vector,
+             std::vector<unsigned int> &t_indices_vector)
+{
+
+    std::ifstream file_stream(t_file, std::ios::in);
+
+    // ve se o qervio existe
+    if (!file_stream.is_open())
+    {
+
+        std::cerr << "Could not read  file " << t_file << " File does not exist" << std::endl;
+        return false;
+    }
+
+    // Initialize temporary variables
+    std::string line = "";
+
+    std::vector<glm::vec3> temp_vertices;
+    std::vector<glm::vec2> temp_texture;
+    std::vector<glm::vec3> temp_normals;
+
+    std::vector<int> uv_indices;
+    std::vector<int> normal_indices;
+
+    int index_count = 0;
+
+    while (1)
+    {
+
+        std::getline(file_stream, line);
+
+        // Check if file is empty
+        if (line.empty())
+        {
+            break;
+        }
+
+        // Split line by white space
+        std::istringstream iss(line);
+        std::vector<std::string> result{std::istream_iterator<std::string>(iss), {}};
+
+        // Identify line by the first element
+        if (result[0].compare("v") == 0)
+        {
+
+            temp_vertices.push_back(glm::vec3(std::strtof(result[1].c_str(), 0), std::strtof(result[2].c_str(), 0), std::strtof(result[3].c_str(), 0)));
+        }
+        else if (result[0].compare("vt") == 0)
+        {
+
+            temp_texture.push_back(glm::vec2(std::strtof(result[1].c_str(), 0), std::strtof(result[2].c_str(), 0)));
+        }
+        else if (result[0].compare("vn") == 0)
+        {
+
+            temp_normals.push_back(glm::vec3(std::strtof(result[1].c_str(), 0), std::strtof(result[2].c_str(), 0), std::strtof(result[3].c_str(), 0)));
+        }
+        else if (result[0].compare("f") == 0)
+        {
+
+            std::vector<std::string> first_vertex;
+
+            splitString(result[1], '/', first_vertex);
+
+            processVertex(t_indices_vector, t_vertices_vector, t_normals_vector, t_texture_vector, first_vertex, temp_texture, temp_normals, temp_vertices, &index_count);
+
+            std::vector<std::string> second_vertex;
+
+            splitString(result[2], '/', second_vertex);
+
+            processVertex(t_indices_vector, t_vertices_vector, t_normals_vector, t_texture_vector, second_vertex, temp_texture, temp_normals, temp_vertices, &index_count);
+
+            std::vector<std::string> third_vertex;
+
+            splitString(result[3], '/', third_vertex);
+
+            processVertex(t_indices_vector, t_vertices_vector, t_normals_vector, t_texture_vector, third_vertex, temp_texture, temp_normals, temp_vertices, &index_count);
+        }
+    }
+    file_stream.close();
+    return true;
+}
 
 Model Loader::loadVAO(const std::vector<float> &position, const std::vector<unsigned int> &indices, const std::vector<float> &textureCoords)
 {
@@ -84,7 +228,7 @@ unsigned int Loader::loadTexture(const std::string fileName)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    stbi_set_flip_vertically_on_load(false);
+    stbi_set_flip_vertically_on_load(true);
 
     unsigned char *image = stbi_load(fileName.c_str(), &width, &height, &nrChannels, 0);
     if (image)
@@ -99,4 +243,17 @@ unsigned int Loader::loadTexture(const std::string fileName)
     stbi_image_free(image);
 
     return textureId;
+}
+
+//funcao p/ carregar obj
+Model Loader::loadObj(const char *t_file)
+{
+    //carrega os vetores do obj
+    std::vector<float> vertices_vector;
+    std::vector<float> texture_vector;
+    std::vector<float> normals_vector;
+    std::vector<unsigned int> indices_vector;
+    loadOBJ(t_file, vertices_vector, texture_vector, normals_vector, indices_vector);
+
+    return loadVAO(vertices_vector, indices_vector, texture_vector);
 }

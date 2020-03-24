@@ -22,7 +22,7 @@ Renderer::Renderer() : backgroundColor(0, 0, 0), shader("./source/vertexShader.g
     shader.use();
     shader.loadProjectionMatrix(projectionMatrix);
     shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-    shader.setFloat("lightIntensity", 0.2f);
+    shader.setFloat("lightIntensity", 1.0f);
     shader.stop();
 }
 
