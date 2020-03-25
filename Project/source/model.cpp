@@ -10,6 +10,22 @@ Model::Model()
     position = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
+void Model::increasePosition(const GLfloat t_dx, const GLfloat t_dy, const GLfloat t_dz)
+{
+
+    position.x += t_dx;
+    position.y += t_dy;
+    position.z += t_dz;
+}
+
+void Model::increaseRotation(const GLfloat t_dx, const GLfloat t_dy, const GLfloat t_dz)
+{
+
+    rotation.x += t_dx;
+    rotation.y += t_dy;
+    rotation.z += t_dz;
+}
+
 Model::Model(const unsigned int p_vaoId, const unsigned int p_vertexCount)
 {
     vaoId = p_vaoId;

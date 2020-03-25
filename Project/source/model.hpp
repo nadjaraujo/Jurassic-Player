@@ -23,6 +23,16 @@ public:
     void setPosition(glm::vec3);
     void setRotation(glm::vec3);
     unsigned int getVertexCount();
+    glm::vec3 getPosition()
+    {
+        return position;
+    }
+    glm::vec3 getRotation()
+    {
+        return rotation;
+    }
+    void increasePosition(const GLfloat t_dx, const GLfloat t_dy, const GLfloat t_dz);
+    void increaseRotation(const GLfloat t_dx, const GLfloat t_dy, const GLfloat t_dz);
 };
 
 #endif

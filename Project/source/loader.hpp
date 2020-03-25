@@ -3,14 +3,16 @@
 
 #include "include.hpp"
 #include "./model.hpp"
+#include "player.hpp"
 
 class Loader
 {
 public:
     Model loadVAO(const std::vector<float> &, const std::vector<unsigned int> &, const std::vector<float> &, const std::vector<float> &);
+    Player loadVAOPlayer(const std::vector<float> &, const std::vector<unsigned int> &, const std::vector<float> &, const std::vector<float> &);
     unsigned int loadTexture(const std::string);
     Model loadObj(const char *);
-    ;
+    Player loadObjPlayer(const char *);
 
 private:
     std::vector<unsigned int> vaos;

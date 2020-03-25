@@ -3,6 +3,7 @@
 #include "renderer.hpp"
 #include "model.hpp"
 #include "loader.hpp"
+#include "player.hpp"
 #include <stdlib.h>
 using namespace std;
 
@@ -143,7 +144,7 @@ int main()
         1, 1,
         1, 0};
 
-    int numeroArvores = 50;
+    int numeroArvores = 200;
     Renderer renderer = Renderer();
     //textura arvore
     unsigned int texture2 = loader.loadTexture("./Textura/tree.jpg");
@@ -151,9 +152,11 @@ int main()
     std::vector<Model> modelos;
     for (int i = 0; i < numeroArvores; i++)
     {
+        float r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
         Model modelo = loader.loadObj("./Modelos/tree.obj");
-        modelo.setPosition(glm::vec3(1.0f + (rand() % 100 - 50), -6.0f, 0.0f + (rand() % 100 - 50)));
-        modelo.setScale(glm::vec3(3.0f, 3.0f, 3.0f));
+
+        modelo.setPosition(glm::vec3(static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 800 - 400, 0.0, static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 800 - 400));
+        modelo.setScale(glm::vec3(10.0f, 10.0f, 10.0f));
         modelo.setTexture(texture2);
 
         modelos.push_back(modelo);
@@ -161,18 +164,20 @@ int main()
 
     // textura dinossauro
     unsigned int texture1 = loader.loadTexture("./Textura/dinossauro.jpg");
-    Model modelo1 = loader.loadObj("./Modelos/dinossauronadja.obj");
-    modelo1.setPosition(glm::vec3(0.0f, -6.0, 0.0));
-    //modelo1.setScale(glm::vec3(0.5, 0., 0.0));
-    modelo1.setTexture(texture1);
-    modelos.push_back(modelo1);
+
+    Player player = loader.loadObjPlayer("./Modelos/dinossauronadjaInvertido.obj");
+    player.setPosition(glm::vec3(0.0f, 0.0, 0.0));
+    player.setScale(glm::vec3(2.0, 2.0, 2.0));
+    player.setTexture(texture1);
 
     //textura do chão
-    unsigned int textureChao = loader.loadTexture("./Textura/grass2.jpg");
+    unsigned int textureChao = loader.loadTexture("./Textura/grass.jpg");
+
     Model chao = loader.loadVAO(vertices, indices, textureCoords, normalVec);
     chao.setTexture(textureChao);
-    chao.setPosition(glm::vec3(0.0f, -6.0f, 0.0f));
-    chao.setScale(glm::vec3(150.0f, 0.5f, 150.0f));
+    chao.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    chao.setScale(glm::vec3(1000.0f, 0.5f, 1000.0f));
+
     modelos.push_back(chao);
 
     // textura do sol
@@ -181,18 +186,29 @@ int main()
 
     // loop de renderização
 
-    Camera camera;
+    Camera camera = Camera(player);
+    float lastFrame = 0.0f;
+    float deltaTime = 0.0;
+    glfwSetScrollCallback(window, camera.calculateZoom);
+    glfwSetWindowUserPointer(window, &camera);
+
     while (!glfwWindowShouldClose(window))
     {
-        renderer.clear();
-        camera.processInput(window);
-        camera.handleMouse(window);
 
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        renderer.clear();
+        camera.move(window);
+        camera.processInput(window);
+        //camera.handleMouse(window);
+        player.move(window, deltaTime);
         //ourShader.use();
 
         //unsigned int shaderProgram = glGetUniformLocation(ourShader.ID, "transform");
         //glUniformMatrix4fv(shaderProgram, 1, GL_FALSE, glm::value_ptr(transform));
-        renderer.render(camera, modelos);
+        renderer.render(camera, modelos, player);
 
         // // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // // -------------------------------------------------------------------------------

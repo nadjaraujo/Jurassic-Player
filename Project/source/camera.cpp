@@ -1,6 +1,6 @@
 #include "camera.hpp"
 
-Camera::Camera()
+Camera::Camera(Model &m_player) : player(m_player)
 {
 
     position = glm::vec3(-2.0, 0, 0.0f);
@@ -11,7 +11,8 @@ Camera::Camera()
     lastY = 600.0 / 2.0;
     yaw = 0;
     roll = 0;
-    pitch = 0;
+    pitch = 20;
+    anglePlayer = -180;
 }
 
 void Camera::handleMouse(GLFWwindow *window)
@@ -56,24 +57,12 @@ void Camera::processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    const float cameraSpeed = 0.1f; // adjust accordingly
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        position += cameraSpeed * front;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        position -= cameraSpeed * front;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        position -= glm::normalize(glm::cross(front, up)) * cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        position += glm::normalize(glm::cross(front, up)) * cameraSpeed;
-    //     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-    //         yaw -= cameraSpeed * 15;
-    //     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-    //         yaw += cameraSpeed * 15;
-
-    //     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    //     front.y = sin(glm::radians(pitch));
-    //     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    //     front = glm::normalize(front);
+    if (glfwGetKey(window, GLFW_KEY_BACKSPACE) == GLFW_PRESS)
+    {
+        pitch = 20;
+        anglePlayer = -180;
+        distanceCam = 50;
+    }
 }
 
 float Camera::getPitch()

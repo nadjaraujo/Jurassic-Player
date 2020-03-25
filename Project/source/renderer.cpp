@@ -34,14 +34,18 @@ void Renderer::createProjectionMatrix()
     projectionMatrix = glm::perspective(glm::radians(FOV), (float)800 / (float)600, NEAR_PLANE, FAR_PLANE);
 }
 
-void Renderer::render(Camera t_camera, std::vector<Model> models)
+void Renderer::render(Camera t_camera, std::vector<Model> models, Player player)
 {
     shader.use();
     shader.loadViewMatrix(t_camera);
+
+    prepareModel(player);
+    glDrawElements(GL_TRIANGLES, player.getVertexCount(), GL_UNSIGNED_INT, 0);
+    unbindModel();
+
     shader.setVec3("viewPos", t_camera.getPosition());
     for (Model &model : models)
     {
-
         prepareModel(model);
         glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
         unbindModel();

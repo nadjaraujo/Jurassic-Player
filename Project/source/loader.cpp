@@ -162,6 +162,22 @@ Model Loader::loadVAO(const std::vector<float> &position, const std::vector<unsi
     return Model(vaoId, indices.size());
 }
 
+Player Loader::loadVAOPlayer(const std::vector<float> &position, const std::vector<unsigned int> &indices, const std::vector<float> &textureCoords, const std::vector<float> &normalVector)
+{
+    // Create VAO
+    unsigned int vaoId = createVAO();
+    bindIndicesBuffer(indices);
+    // Store model positionitions on VAO 0
+    storeDataInAttributeList(0, 3, position);
+    storeDataInAttributeList(1, 2, textureCoords);
+    storeDataInAttributeList(2, 3, normalVector);
+    // Unbind
+    unbindVAO();
+    // Return RawModel
+
+    return Player(vaoId, indices.size());
+}
+
 unsigned int Loader::createVAO()
 {
 
@@ -254,4 +270,16 @@ Model Loader::loadObj(const char *t_file)
     loadOBJ(t_file, vertices_vector, texture_vector, normals_vector, indices_vector);
 
     return loadVAO(vertices_vector, indices_vector, texture_vector, normals_vector);
+}
+
+Player Loader::loadObjPlayer(const char *t_file)
+{
+    //carrega os vetores do obj
+    std::vector<float> vertices_vector;
+    std::vector<float> texture_vector;
+    std::vector<float> normals_vector;
+    std::vector<unsigned int> indices_vector;
+    loadOBJ(t_file, vertices_vector, texture_vector, normals_vector, indices_vector);
+
+    return loadVAOPlayer(vertices_vector, indices_vector, texture_vector, normals_vector);
 }

@@ -78,12 +78,11 @@ public:
 	glm::mat4 createViewMatrix(Camera t_camera)
 	{
 
-		/*glm::mat4 view_matrix = glm::mat4(1.0f);
+		glm::mat4 view_matrix = glm::mat4(1.0f);
 
 		view_matrix = glm::rotate(view_matrix, glm::radians(t_camera.getPitch()), {1, 0, 0});
 		view_matrix = glm::rotate(view_matrix, glm::radians(t_camera.getYaw()), {0, 1, 0});
-		view_matrix = glm::translate(view_matrix, -t_camera.getPosition());*/
-		glm::mat4 view_matrix = glm::lookAt(t_camera.getPosition(), t_camera.getPosition() + t_camera.getFront(), t_camera.getUp());
+		view_matrix = glm::translate(view_matrix, -t_camera.getPosition());
 
 		return view_matrix;
 	}
