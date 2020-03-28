@@ -21,10 +21,10 @@ Renderer::Renderer() : backgroundColor(0.5, 0.8, 0.9), shader("./source/vertexSh
     createProjectionMatrix();
     shader.use();
     shader.loadProjectionMatrix(projectionMatrix);
-    shader.setVec3("lightamb", .5f, .5f, .5f);
+    shader.setVec3("lightamb", .2f, .2f, .2f);
     shader.setVec3("lightfont", 1.0f, 1.0f, 0.0f);
     shader.setFloat("lightIntensity", 1.0f);
-    shader.setVec3("lightPos", 0.0f, 30.f, .0f);
+    shader.setVec3("lightPos", 0.0f, 240.0f, .0f);
     shader.stop();
 }
 

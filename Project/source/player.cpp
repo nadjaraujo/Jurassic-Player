@@ -10,7 +10,7 @@ Player::Player(const unsigned int p_vaoId, const unsigned int p_vertexCount)
 	m_current_turn_speed = 0;
 	m_upwards_speed = 0;
 	m_jump_power = 50;
-	m_gravity = -50;
+	m_gravity = -100;
 	m_in_air = false;
 	terrain_height = 0;
 }
@@ -49,7 +49,7 @@ void Player::checkInputs(GLFWwindow *window)
 		jump();
 	}
 }
-void Player::move(GLFWwindow *p_window, GLfloat p_delta_time)
+void Player::move(GLFWwindow *p_window, GLfloat p_delta_time, std::vector <Model> modelos)
 {
 
 	checkInputs(p_window);
@@ -59,9 +59,9 @@ void Player::move(GLFWwindow *p_window, GLfloat p_delta_time)
 	GLfloat dx = (GLfloat)(distanceZ * glm::sin(glm::radians(getRotation().y)));
 	GLfloat dz = (GLfloat)(distanceZ * glm::cos(glm::radians(getRotation().y)));
 
-	increasePosition(dx, 0, dz);
+	increasePosition(dx, 0, dz, modelos);
 	m_upwards_speed += m_gravity * p_delta_time;
-	increasePosition(0, m_upwards_speed * p_delta_time, 0);
+	increasePosition(0, m_upwards_speed * p_delta_time, 0, modelos);
 
 	if (getPosition().y < terrain_height)
 	{

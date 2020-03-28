@@ -13,7 +13,7 @@ uniform vec3 objectColor;
 uniform vec3 viewPos;
 
 //vec3 colorA = vec3(0.149,0.141,0.912);
-float specularStrength = 5.0;
+float specularStrength = 0.5;
 
 void main()
 {
@@ -28,7 +28,7 @@ void main()
     //especular
     vec3 viewDir = normalize(viewPos - fragPos);
     vec3 reflectDir = reflect(-lightDir, norm); 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specular = specularStrength * spec * lightfont; 
     //total
     vec4 cores = vec4(((AmbientColor + diffuse + specular) * objectColor), 1.0f);

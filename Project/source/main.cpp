@@ -158,7 +158,7 @@ int main()
         modelo.setPosition(glm::vec3(static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 800 - 400, 0.0, static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 800 - 400));
         modelo.setScale(glm::vec3(10.0f, 10.0f, 10.0f));
         modelo.setTexture(texture2);
-
+        
         modelos.push_back(modelo);
     }
 
@@ -179,7 +179,9 @@ int main()
     chao.setScale(glm::vec3(1000.0f, 0.5f, 1000.0f));
 
     modelos.push_back(chao);
-
+    /*
+    glm::vec3 scale = modelos.at(modelos.size() - 1).getScale();
+    cout << scale.x << " " << scale.y << " " << scale.z << endl;*/
     // textura do sol
     glm::vec3 lightPos(.0f, 20.0f, .0f);
     //ourShader.use();
@@ -203,7 +205,7 @@ int main()
         camera.move(window);
         camera.processInput(window);
         //camera.handleMouse(window);
-        player.move(window, deltaTime);
+        player.move(window, deltaTime, modelos);
         //ourShader.use();
 
         //unsigned int shaderProgram = glGetUniformLocation(ourShader.ID, "transform");

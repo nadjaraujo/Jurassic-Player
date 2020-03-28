@@ -31,7 +31,10 @@ public:
     {
         return rotation;
     }
-    void increasePosition(const GLfloat t_dx, const GLfloat t_dy, const GLfloat t_dz);
+    glm::vec3 getScale(){
+        return scale;
+    }
+    bool increasePosition(const GLfloat t_dx, const GLfloat t_dy, const GLfloat t_dz, std::vector <Model> modelos);
     void increaseRotation(const GLfloat t_dx, const GLfloat t_dy, const GLfloat t_dz);
 };
 

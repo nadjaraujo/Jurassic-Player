@@ -19,7 +19,7 @@ private:
 public:
 	GLfloat terrain_height;
 	Player(const unsigned int p_vaoId, const unsigned int p_vertexCount);
-	void move(GLFWwindow *p_window, GLfloat p_delta_time);
+	void move(GLFWwindow *p_window, GLfloat p_delta_time, std::vector <Model> modelos);
 	void checkInputs(GLFWwindow *window);
 	void jump();
 	~Player();

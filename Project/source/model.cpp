@@ -10,9 +10,23 @@ Model::Model()
     position = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
-void Model::increasePosition(const GLfloat t_dx, const GLfloat t_dy, const GLfloat t_dz)
+bool Model::increasePosition(const GLfloat t_dx, const GLfloat t_dy, const GLfloat t_dz, std::vector <Model> modelos)
 {
-
+//    std::cout << position.x << " " << position.y << " " << position.z << std::endl;
+    GLfloat tempx = position.x + t_dx, tempy = position.y + t_dy, tempz = position.z + t_dz;
+    glm::vec3 pos, sca;
+    bool colisaoX, colisaoY, colisaoZ;
+    for(int i = 0; i < modelos.size() - 2; i++){
+        pos = modelos.at(i).getPosition();
+        sca = modelos.at(i).getScale();
+        sca.y = sca.y*3;
+        sca.x = sca.x*1.15;
+        sca.z = sca.z*1.15;
+        colisaoX = tempx + scale.x >= pos.x && pos.x + sca.x >= tempx;
+        colisaoY = tempy + scale.y >= pos.y && pos.y + sca.y >= tempy;
+        colisaoZ = tempz + scale.z >= pos.z && pos.z + sca.z >= tempz;
+        if(colisaoX && colisaoY && colisaoZ) return true;
+    }
     position.x += t_dx;
     position.y += t_dy;
     position.z += t_dz;
