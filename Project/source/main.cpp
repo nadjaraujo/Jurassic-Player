@@ -162,22 +162,54 @@ int main()
         modelos.push_back(modelo);
     }
 
-    // textura dinossauro
-    unsigned int texture1 = loader.loadTexture("./Textura/dinossauro.jpg");
+    //pedras
 
-    Player player = loader.loadObjPlayer("./Modelos/dinossauronadjaInvertido.obj");
+    int nPedras = 20; 
+    unsigned int texturaPedra = loader.loadTexture("./Textura/rock.jpg");
+
+     for (int i = 0; i < nPedras; i++)
+    {
+        float r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        Model modelo = loader.loadObj("./Modelos/rocha.obj");
+
+        modelo.setPosition(glm::vec3(static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 800 - 400, 0.0, static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 800 - 400));
+        modelo.setScale(glm::vec3(10.0f, 10.0f, 10.0f));
+        modelo.setTexture(texturaPedra);
+        
+        modelos.push_back(modelo);
+    }
+
+     //grama
+    int nGrama = 400; 
+    unsigned int texturaGrama = loader.loadTexture("./Textura/grass.jpg");
+
+     for (int i = 0; i < nPedras; i++)
+    {
+        float r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        Model modelo = loader.loadObj("./Modelos/grass.obj");
+        modelo.setPosition(glm::vec3(static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 800 - 400, 0.0, static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 800 - 400));
+        modelo.setScale(glm::vec3(5.0f, 5.0f, 5.0f));
+        modelo.setTexture(texturaGrama);
+
+        modelos.push_back(modelo);
+    }
+
+
+    // textura dinossauro
+    unsigned int texture1 = loader.loadTexture("./Textura/skin.jpg");
+    Player player = loader.loadObjPlayer("./Modelos/trex2.obj");
     player.setPosition(glm::vec3(0.0f, 0.0, 0.0));
     player.setScale(glm::vec3(2.0, 2.0, 2.0));
+
     player.setTexture(texture1);
 
-    //textura do chão
-    unsigned int textureChao = loader.loadTexture("./Textura/grass.jpg");
 
+    //textura do chão
+    unsigned int textureChao = loader.loadTexture("./Textura/terrain.jpg");
     Model chao = loader.loadVAO(vertices, indices, textureCoords, normalVec);
     chao.setTexture(textureChao);
     chao.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
     chao.setScale(glm::vec3(1000.0f, 0.5f, 1000.0f));
-
     modelos.push_back(chao);
     /*
     glm::vec3 scale = modelos.at(modelos.size() - 1).getScale();
